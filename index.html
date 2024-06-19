@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نموذج اتصال Spacetoon Links</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            padding: 1rem;
+            color: #212d31;
+            font-family: 'Roboto', sans-serif;
+        }
+
+        .contain {
+            background-color: #332943;
+            max-width: 1170px;
+            margin-left: auto;
+            margin-right: auto;
+            padding: 1em;
+        }
+
+        .form {
+            background-color: #fff;
+            padding: 2em;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .form img {
+            max-width: 100px;
+            margin-bottom: 1em;
+        }
+
+        .form h2 {
+            margin-bottom: 1em;
+            color: #ec1c24;
+        }
+
+        .form p {
+            margin: 0 0 1em;
+        }
+
+        .form input, .form textarea {
+            width: 100%;
+            padding: 1em;
+            border: 1px solid #bdbdbd;
+            border-radius: 5px;
+            text-align: right;
+            direction: rtl;
+        }
+
+        .form input[type="checkbox"] {
+            width: auto;
+            margin-right: 10px;
+            text-align: right;
+            direction: rtl;
+        }
+
+        .form .submit-btn, .form .reset-btn {
+            padding: 1em 2em;
+            border: 1px solid #ec1c24;
+            color: #ec1c24;
+            background: transparent;
+            border-radius: 15px;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: background 0.3s, color 0.3s;
+        }
+
+        .form .submit-btn:hover, .form .reset-btn:hover {
+            background: #ec1c24;
+            color: #eee;
+        }
+
+        .form .error {
+            color: #ec1c24;
+            font-size: 0.875em;
+        }
+
+        .contact-wrapper {
+            margin: 2em 0;
+            color: #ffffff;
+        }
+
+        .contact-wrapper ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .contact-wrapper li {
+            margin-bottom: 1em;
+        }
+
+        .highlight-text {
+            color: #ec1c24;
+        }
+
+        .highlight-text-grey {
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+    <div class="contain">
+        <div class="wrapper">
+            <div class="form">
+                <img src="https://i.ibb.co/s3S9f2v/spacetoon-links-modified.png" alt="شعار Spacetoon">
+                <h2>أرسل لنا رسالة</h2>
+                <form id="form">
+                    <input type="hidden" name="access_key" value="1c880b2c-ca13-4133-9eeb-6e6fb838887c">
+                    <p>
+                        <input id="name" class="form-input" type="text" name="name" placeholder="اسمك*" required>
+                        <small class="name-error"></small>
+                    </p>
+                    <p>
+                        <input id="email" class="form-input" type="email" name="email" placeholder="بريدك الإلكتروني*" required>
+                        <small class="email-error"></small>
+                    </p>
+                    <p>
+                        <input id="phone" class="form-input" type="tel" name="phone" placeholder="رقم هاتفك*" required>
+                        <small class="email-error"></small>
+                    </p>
+                    <p class="full-width">
+                        <textarea id="message" name="message" placeholder="رسالتك*" required></textarea>
+                    </p>
+                    <p class="full-width">
+                        <input type="checkbox" name="botcheck" class="hidden" style="display: none;">
+                        <input type="checkbox" id="checkbox" name="checkbox" checked> نعم، أود أن أتلقى موافقة عبر الهاتف أو البريد الإلكتروني بخصوص التحديثات الأخيرة.
+                    </p>
+                    <p class="full-width">
+                        <button type="submit" class="submit-btn">إرسال النموذج</button>
+                        <button type="button" class="reset-btn" onclick="resetForm()">إعادة تعيين</button>
+                    </p>
+                    <div id="result"></div>
+                </form>
+            </div>
+            <div class="contacts contact-wrapper">
+                <ul>
+                    <h4>الإبلاغ عن روابط الفيديو المعطلة</h4>
+                    <li>مرحبًا بك في نموذج اتصال سبيستون لينكس! نحن سعداء بوجودك هنا ونرغب في ضمان أن تكون تجربتك في مشاهدة الأنمي ممتعة وسلسة.<br> <span class="highlight-text-grey">إذا واجهت أي مشاكل في روابط الفيديو أو لاحظت عدم تشغيل أي حلقات، يرجى إخبارنا حتى نتمكن من إصلاحها في أقرب وقت ممكن.</span> <br>
+                    <h5>شكرًا لتعاونك ودعمك!</h5>
+                    </li>                 
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const form = document.getElementById('form');
+        const result = document.getElementById('result');
+
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const formData = new FormData(form);
+            const object = Object.fromEntries(formData);
+            const json = JSON.stringify(object);
+            result.innerHTML = "يرجى الانتظار...";
+
+            fetch('https://api.web3forms.com/submit', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                body: json
+            })
+            .then(async (response) => {
+                let json = await response.json();
+                if (response.status == 200) {
+                    result.innerHTML = "تم إرسال النموذج بنجاح";
+                    alert('شكراً للتواصل معنا، سنعاود التواصل معك في أقرب وقت.');
+                } else {
+                    console.log(response);
+                    result.innerHTML = json.message;
+                }
+            })
+            .catch(error => {
+                console.log(error);
+                result.innerHTML = "حدث خطأ ما!";
+            })
+            .then(function() {
+                form.reset();
+                setTimeout(() => {
+                    result.style.display = "none";
+                }, 3000);
+            });
+        });
+
+        function resetForm() {
+            form.reset();
+            result.innerHTML = "";
+        }
+    </script>
+</body>
+</html>
